@@ -4,7 +4,7 @@ spring:
   application:
     name: ingestion-service
   kafka:
-    bootstrap-servers: 192.168.29.134:9092
+    bootstrap-servers: <HOST_IP>:9092
     consumer:
       group-id: ${spring.application.name}
       auto-offset-reset: earliest
