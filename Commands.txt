@@ -1,0 +1,60 @@
+# Kafka commands
+kafka-topics --bootstrap-server localhost:9092 --list
+kafka-topics --bootstrap-server localhost:9092 --delete --topic raw-articles
+kafka-console-consumer --bootstrap-server localhost:9092 --topic processed-articles --from-beginning
+kafka-topics --describe --topic raw-articles --bootstrap-server localhost:9092
+kafka-topics --alter --topic raw-articles --bootstrap-server localhost:9092 --partitions 2
+docker logs -f kafka
+
+# Run same service on different port
+mvn -pl processing-service spring-boot:run "-Dspring-boot.run.arguments=--server.port=8084"
+
+# docker
+docker ps -a
+docker rm <container_name or ID>
+docker container prune
+docker logs -f postgresDB
+docker exec -it kafka bash
+docker-compose up -d
+docker-compose down -v
+docker exec -it postgresDB psql -U newsuser -d newsdb -c "SHOW timezone;"
+docker volume ls
+docker volume prune
+docker images
+docker rmi a1b2c3d4e5f6 // delete image
+docker build -t <service_name:latest> .
+docker run -p 8083:8083 query-service
+docker network ls
+docker network create shared-network
+docker run --network shared-network -p 8083:8083 query-service
+docker run --network shared-network --name query-service -p 8083:8083 query-service
+
+# POSTGRES DB in docker
+psql -U newsuser -d newsdb
+CREATE EXTENSION IF NOT EXISTS vector; for pgvector
+ALTER TABLE news_articles ADD COLUMN embedding vector(1536);
+
+# Kubernetes/Minikube
+
+#install kubectl and add to path or move .exe under System32  as it is alredy in system path
+#install MiniKube - it will run a single node k8 cluter in a docker conatiner
+#minikube will update the .kube/config file so that kubectl can connect to it
+
+minikube start
+kubectl version --client
+kubectl get nodes
+kubectl get pods
+kubectl delete pod processing-service-7bb79bb899-blqlx
+kubectl get service
+# switch to create image inside the kubernetes cluster
+minikube docker-env
+& minikube -p minikube docker-env --shell powershell | Invoke-Expression
+kubectl apply -f ingestion-service-deployment.yaml
+kubectl apply -f ingestion-service-service.yaml
+# to use minikube terminal
+minikube ssh
+curl http://10.244.0.4:8081/health
+
+# fix the issue of minikube ip not reachable
+minikube service ingestion-service
+kubectl port-forward svc/ingestion-service 8081:80
