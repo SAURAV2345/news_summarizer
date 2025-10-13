@@ -15,5 +15,11 @@ spec:
       containers:
         - name: query-service
           image: query-service:1.0
+          env:
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: openai-secret
+                  key: OPENAI_API_KEY
           ports:
             - containerPort: 8083 # Change to your app's port

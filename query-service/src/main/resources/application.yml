@@ -6,7 +6,7 @@ spring:
   application:
     name: query-service
   kafka:
-    bootstrap-servers: host.minikube.internal:9092
+    bootstrap-servers: 192.168.29.134:9092
     consumer:
       group-id: ${spring.application.name}
       auto-offset-reset: earliest

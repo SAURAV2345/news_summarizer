@@ -44,6 +44,7 @@ minikube start
 kubectl version --client
 kubectl get nodes
 kubectl get pods
+kubectl get pod <pod-name> -o jsonpath='{.spec.containers[*].name}' // to get container name
 kubectl delete pod processing-service-7bb79bb899-blqlx
 kubectl get service
 # switch to create image inside the kubernetes cluster
@@ -57,4 +58,10 @@ curl http://10.244.0.4:8081/health
 
 # fix the issue of minikube ip not reachable
 minikube service ingestion-service
+# ro access the service from postman we need to forward port the service ports and then use localhost
 kubectl port-forward svc/ingestion-service 8081:80
+kubectl get svc
+kubectl get deployments
+kubectl rollout restart deployment/ingestion-service // restart pods with the new image given the new image name is same as previous
+kubectl create secret generic openai-secret --from-literal=OPENAI_API_KEY="<openai-secret-key>"
+kubectl get secrets
