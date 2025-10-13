@@ -3,8 +3,11 @@ kafka-topics --bootstrap-server localhost:9092 --list
 kafka-topics --bootstrap-server localhost:9092 --delete --topic raw-articles
 kafka-console-consumer --bootstrap-server localhost:9092 --topic processed-articles --from-beginning
 kafka-topics --describe --topic raw-articles --bootstrap-server localhost:9092
-kafka-topics --alter --topic raw-articles --bootstrap-server localhost:9092 --partitions 2
+kafka-topics --alter --topic raw-articles --bootstrap-server localhost:9092 --partitions 2 // restart pods after increasing the partition
+docker exec -it kafka kafka-topics --alter --topic raw-articles --partitions 2 --bootstrap-server localhost:9092
+
 docker logs -f kafka
+
 
 # Run same service on different port
 mvn -pl processing-service spring-boot:run "-Dspring-boot.run.arguments=--server.port=8084"
@@ -65,3 +68,9 @@ kubectl get deployments
 kubectl rollout restart deployment/ingestion-service // restart pods with the new image given the new image name is same as previous
 kubectl create secret generic openai-secret --from-literal=OPENAI_API_KEY="<openai-secret-key>"
 kubectl get secrets
+kubectl scale deployment processing-service --replicas=2 # increase the pods as required
+
+#git commands
+git add .
+git commit -m ""
+git push origin master
